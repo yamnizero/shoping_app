@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:shoping_app/shared/local/cache_helper.dart';
+import 'package:shoping_app/shared/remote/dio_helper.dart';
 
-import 'modules/on_bording/on_boarding_screen.dart';
 import 'modules/shopping_app/login/shop_login.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  DioHelper.init();
+  await CacheHelper.init();
   runApp(const MyApp());
 }
 
