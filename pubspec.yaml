@@ -33,8 +33,13 @@ dependencies:
   flutter_bloc:
   dio:
   shared_preferences: ^2.0.11
+  smooth_page_indicator:
+  get_it:
+  carousel_slider:
   conditional_builder_null_safety:
   fluttertoast: ^8.0.8
+  hexcolor:
+
 
 
   # The following adds the Cupertino Icons font to your application.

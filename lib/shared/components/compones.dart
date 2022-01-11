@@ -73,7 +73,13 @@ void navigateTo(context, widget) => Navigator.push(
     builder: (context) => widget,
   ),
 );
-
+void navigateAndFinish(context, widget) => Navigator.pushAndRemoveUntil(
+  context,
+  MaterialPageRoute(
+    builder: (context) => widget,
+  ),
+      (Route<dynamic> route) => false,
+);
 
 Widget buildSeparator() => Container(
   height: 1.0,

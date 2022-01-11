@@ -27,7 +27,7 @@ class ShopLoginScreen extends StatelessWidget {
                 print(state.loginModel.data.token);
                 Fluttertoast.showToast(
                     msg: state.loginModel.message,
-                    toastLength: Toast.LENGTH_SHORT,
+                    toastLength: Toast.LENGTH_LONG,
                     gravity: ToastGravity.BOTTOM,
                     timeInSecForIosWeb: 5,
                     backgroundColor: Colors.green,
@@ -40,7 +40,7 @@ class ShopLoginScreen extends StatelessWidget {
                   print(state.loginModel.message);
                   Fluttertoast.showToast(
                       msg: state.loginModel.message,
-                      toastLength: Toast.LENGTH_SHORT,
+                      toastLength: Toast.LENGTH_LONG,
                       gravity: ToastGravity.BOTTOM,
                       timeInSecForIosWeb: 5,
                       backgroundColor: Colors.red,
