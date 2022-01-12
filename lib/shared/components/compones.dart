@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shoping_app/modules/shopping_app/login/shop_login.dart';
+import 'package:shoping_app/shared/local/cache_helper.dart';
 
 Widget defaultButton({
   double wid = double.infinity,
@@ -90,21 +92,21 @@ Widget buildSeparator() => Container(
 
 void showToast({
   required String text,
-  required ToastStates state,
+  required ToastStates states,
 }) =>  Fluttertoast.showToast(
     msg: text,
     toastLength: Toast.LENGTH_LONG,
     gravity: ToastGravity.BOTTOM,
     timeInSecForIosWeb: 5,
-    backgroundColor: chooseToastColor(state),
+    backgroundColor: chooseToastColor(states),
     textColor: Colors.white,
     fontSize: 16.0
 );
 enum ToastStates{SUCCESS,ERROR,WARING}
 
-Color chooseToastColor(ToastStates state) {
+Color chooseToastColor(ToastStates states) {
   Color color;
-  switch (state) {
+  switch (states) {
     case ToastStates.SUCCESS:
       color = Colors.green;
       break;
@@ -118,7 +120,13 @@ Color chooseToastColor(ToastStates state) {
   return color;
 }
 
-// void singOut(){
-//   CacheHelper.rem
-// }
+void singOut(context){
+  CacheHelper.removeData(key: 'token').then((value)
+  {
+    if(value)
+    {
+      navigateAndFinish(context, ShopLoginScreen());
+    }
+  });
+}
 

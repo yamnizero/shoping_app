@@ -53,7 +53,9 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
 
   void submit()
   {
-    CacheHelper.saveData(key: 'onBoarding', value: true,).then((value) {
+    CacheHelper.saveData(
+      key: 'onBoarding', value: true,
+    ).then((value) {
       if(value){
         navigateAndFinish(
           context,
@@ -74,10 +76,7 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
         backgroundColor: Colors.white,
         actions: [
           defaultTextButton(
-              function: ()
-              {
-                navigateAndFinish(context, const ShopLoginScreen());
-              },
+              function: submit,
               text: 'skip'
           ,)
         ],

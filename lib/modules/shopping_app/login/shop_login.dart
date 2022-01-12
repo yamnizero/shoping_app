@@ -26,7 +26,7 @@ class ShopLoginScreen extends StatelessWidget {
             if(state.loginModel.status)
               {
                  print(state.loginModel.message);
-                print(state.loginModel.data.token);
+                 print(state.loginModel.data.token);
                 CacheHelper.saveData(
                   key: 'token',
                   value: state.loginModel.data.token,
@@ -39,7 +39,7 @@ class ShopLoginScreen extends StatelessWidget {
                   print(state.loginModel.message);
                   showToast(
                     text: state.loginModel.message,
-                    state: ToastStates.ERROR,
+                    states: ToastStates.ERROR,
                   );
                 }
           }
