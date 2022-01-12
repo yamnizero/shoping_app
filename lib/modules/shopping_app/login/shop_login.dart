@@ -2,10 +2,12 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shoping_app/layout/shop_layout/shop_layout.dart';
 import 'package:shoping_app/modules/shopping_app/login/cubit/cubit.dart';
 import 'package:shoping_app/modules/shopping_app/login/cubit/states.dart';
 import 'package:shoping_app/modules/shopping_app/register/shop_register.dart';
 import 'package:shoping_app/shared/components/compones.dart';
+import 'package:shoping_app/shared/local/cache_helper.dart';
 
 class ShopLoginScreen extends StatelessWidget {
   const ShopLoginScreen({Key? key}) : super(key: key);
@@ -23,29 +25,21 @@ class ShopLoginScreen extends StatelessWidget {
           {
             if(state.loginModel.status)
               {
-                print(state.loginModel.message);
+                 print(state.loginModel.message);
                 print(state.loginModel.data.token);
-                Fluttertoast.showToast(
-                    msg: state.loginModel.message,
-                    toastLength: Toast.LENGTH_LONG,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIosWeb: 5,
-                    backgroundColor: Colors.green,
-                    textColor: Colors.white,
-                    fontSize: 16.0
-                );
-
+                CacheHelper.saveData(
+                  key: 'token',
+                  value: state.loginModel.data.token,
+                ).then((value)
+                {
+                  navigateAndFinish(context, const ShopLayout());
+                });
               }else
                 {
                   print(state.loginModel.message);
-                  Fluttertoast.showToast(
-                      msg: state.loginModel.message,
-                      toastLength: Toast.LENGTH_LONG,
-                      gravity: ToastGravity.BOTTOM,
-                      timeInSecForIosWeb: 5,
-                      backgroundColor: Colors.red,
-                      textColor: Colors.white,
-                      fontSize: 16.0
+                  showToast(
+                    text: state.loginModel.message,
+                    state: ToastStates.ERROR,
                   );
                 }
           }

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'package:shoping_app/shared/cubit/cubit.dart';
-import 'package:shoping_app/shared/cubit/states.dart';
+import 'package:shoping_app/layout/shop_layout/cubit/cubit.dart';
+import 'package:shoping_app/layout/shop_layout/cubit/states.dart';
+import 'package:shoping_app/modules/on_bording/on_boarding_screen.dart';
 import 'package:shoping_app/shared/local/cache_helper.dart';
 import 'package:shoping_app/shared/remote/dio_helper.dart';
+import 'package:shoping_app/shared/theme.dart';
+
 
 import 'modules/shopping_app/login/shop_login.dart';
 
@@ -14,25 +15,34 @@ void main() async {
 
   DioHelper.init();
   await CacheHelper.init();
-  runApp(const MyApp());
+  //bool isDark = CacheHelper.getData(key: 'isDark');
+  //   bool onBoarding = CacheHelper.getData(key: 'onBoarding');
+  runApp( MyApp(
+    // onBoarding: onBoarding,
+  ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  //final bool isDark;
+  // final bool onBoarding;
+   MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
     return BlocProvider(
-      create: (BuildContext context) => AppCubit(),
-      child: BlocConsumer<AppCubit,AppStates> (
+      create: (BuildContext context) => ShopCubit(),
+      child: BlocConsumer<ShopCubit,ShopStates> (
         listener: (context,state){},
         builder: (context,state){
-          return const MaterialApp(
+          return  MaterialApp(
             debugShowCheckedModeBanner: false,
-
-            home: ShopLoginScreen(),
+           theme:lightTheme,
+            // darkTheme: darkTheme,
+            home:   ShopLoginScreen() ,
           );
+
         },
       ),
     );
