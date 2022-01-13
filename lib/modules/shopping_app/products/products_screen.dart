@@ -13,14 +13,20 @@ class ProductsScreen extends StatelessWidget {
   Widget build(BuildContext context)
   {
     return  BlocConsumer<ShopCubit,ShopStates>(
-      listener: (context,state){},
+      listener: (context,state){
+        print(state);
+      },
       builder: (context,state)
       {
-        return ConditionalBuilder(
-            condition: ShopCubit.get(context).homeModel != null,
-            builder: (context) => productsBuilder(ShopCubit.get(context).homeModel!)
-            , fallback: (context) => const Center(child:CircularProgressIndicator()),
-        );
+        if(state is ShopLoadingHomeDataState){
+          return const  Center(child:CircularProgressIndicator());
+        }
+        if (state is ShopSuccessHomeDataState)
+          {
+            return productsBuilder(ShopCubit.get(context).homeModel!);
+          }
+        return const Center(child:Text('Error'));
+
       },
 
     );

@@ -15,14 +15,16 @@ class HomeDataModel {
 
   HomeDataModel.fromJson(Map<String, dynamic> json)
   {
-    json['banners'].forEach((element)
-    {
-      banners.add(element);
-    });
+    final banners = json['banners'] ?? [];
+    if(banners != null) {
+      banners.forEach((element) {
+        this.banners.add(BannersModel.fromJson(element));
+      });
+    }
 
     json['products'].forEach((element)
     {
-      products.add(element);
+      products.add(ProductModel.fromJson(element));
     });
   }
 }

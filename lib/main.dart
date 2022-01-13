@@ -32,6 +32,7 @@ void main() async {
      }
 
   runApp( MyApp(
+
     startWidget: widget,
   ));
 }
@@ -53,7 +54,7 @@ class MyApp extends StatelessWidget {
           return  MaterialApp(
             debugShowCheckedModeBanner: false,
            theme:lightTheme,
-            // darkTheme: darkTheme,
+            //darkTheme: darkTheme,
             home: startWidget,
           );
 
