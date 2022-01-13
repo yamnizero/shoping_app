@@ -33,6 +33,7 @@ class ShopLayout extends StatelessWidget {
             {
               cubit.changeBottom(index);
             },
+            currentIndex: cubit.currentIndex ,
             items: const [
               BottomNavigationBarItem(
                 icon: Icon(Icons.home
