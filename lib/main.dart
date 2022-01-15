@@ -24,11 +24,14 @@ void main() async {
 
      if(onBoarding != null)
      {
-       if( token != null) widget =  ShopLayout();
-       else widget = ShopLoginScreen();
+       if( token != null) {
+         widget =  const  ShopLayout();
+       } else {
+         widget =  const ShopLoginScreen();
+       }
      } else
        {
-       widget = OnBoardScreen();
+       widget = const OnBoardScreen();
      }
 
   runApp( MyApp(
@@ -47,7 +50,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return BlocProvider(
-      create: (BuildContext context) => ShopCubit()..getHomeData(),
+      create: (BuildContext context) => ShopCubit()..getHomeData()..getCategories(),
       child: BlocConsumer<ShopCubit,ShopStates> (
         listener: (context,state){},
         builder: (context,state){

@@ -22,10 +22,17 @@ class HomeDataModel {
       });
     }
 
-    json['products'].forEach((element)
-    {
-      products.add(ProductModel.fromJson(element));
-    });
+    final products = json['products'] ?? [];
+    if(products != null) {
+      products.forEach((element) {
+        this.products.add(ProductModel.fromJson(element));
+      });
+    }
+
+    // json['products'].forEach((element)
+    // {
+    //   products.add(ProductModel.fromJson(element));
+    // });
   }
 }
 
@@ -33,9 +40,9 @@ class HomeDataModel {
 {
   late int id;
   late String image;
-  BannersModel.fromJson(Map<String, dynamic>? json)
+  BannersModel.fromJson(Map<String, dynamic> json)
   {
-    id = json!['id'];
+    id = json['id'];
     image = json['image'];
   }
 }
