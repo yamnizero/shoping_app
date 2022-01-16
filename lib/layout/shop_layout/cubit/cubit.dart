@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shoping_app/layout/shop_layout/cubit/states.dart';
 import 'package:shoping_app/model/categories/categories_model.dart';
+import 'package:shoping_app/model/favorites/change_favorites.dart';
 import 'package:shoping_app/model/home/home_model.dart';
 import 'package:shoping_app/modules/shopping_app/cateogries/cateogries_screen.dart';
 import 'package:shoping_app/modules/shopping_app/favorites/favorites_screen.dart';
@@ -29,18 +30,31 @@ class ShopCubit extends Cubit<ShopStates>
     emit(ShopChangeBottomNavState());
   }
 
-  late HomeModel homeModel;
+    HomeModel? homeModel;
+
+    Map<int,bool> favorites = {};
 
   void getHomeData()
   {
-
     emit(ShopLoadingHomeDataState());
+
     DioHelper.getData(
         url: HOME,
       token: token,
     ).then((value)
     {
       homeModel = HomeModel.fromJson(value.data);
+      //add item for favorites..
+      homeModel!.data.products.forEach((element)
+      {
+        //key and value
+        favorites.addAll({
+          element.id: element.inFavorites,
+        });
+      });
+      
+      print(favorites.toString());
+      
       emit(ShopSuccessHomeDataState());
     }).catchError((error)
     {
@@ -67,5 +81,34 @@ class ShopCubit extends Cubit<ShopStates>
     });
   }
 
+
+  late ChangeFavoritesModel changeFavoritesModel;
+
+  void changeFavorites(int productId)
+  {
+    favorites[productId] = !favorites[productId]!;
+
+    emit(ShopChangeFavoritesState());
+
+    DioHelper.postData(
+        url: FAVORITES,
+        data: {'product_id' : productId},
+        token: token,
+    ).then((value)
+    {
+      changeFavoritesModel = ChangeFavoritesModel.fromJson(value.data);
+      print(value.data);
+      if(!changeFavoritesModel.status)
+        {
+          favorites[productId] = !favorites[productId]!;
+        }
+      emit(ShopSuccessChangeFavoritesState(changeFavoritesModel));
+    }).catchError((error)
+    {
+      favorites[productId] = !favorites[productId]!;
+
+      emit(ShopErrorChangeFavoritesState());
+    });
+  }
 
 }

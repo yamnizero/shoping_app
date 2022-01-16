@@ -5,6 +5,7 @@ import 'package:shoping_app/layout/shop_layout/cubit/states.dart';
 import 'package:shoping_app/layout/shop_layout/shop_layout.dart';
 import 'package:shoping_app/modules/on_bording/on_boarding_screen.dart';
 import 'package:shoping_app/shared/local/cache_helper.dart';
+import 'package:shoping_app/shared/observer.dart';
 import 'package:shoping_app/shared/remote/dio_helper.dart';
 import 'package:shoping_app/shared/theme.dart';
 
@@ -21,6 +22,7 @@ void main() async {
   //bool isDark = CacheHelper.getData(key: 'isDark');
      bool? onBoarding = CacheHelper.getData(key: 'onBoarding');
      String? token = CacheHelper.getData(key: 'token');
+     print(token);
 
      if(onBoarding != null)
      {
@@ -34,10 +36,15 @@ void main() async {
        widget = const OnBoardScreen();
      }
 
-  runApp( MyApp(
+  BlocOverrides.runZoned(
+        () {
+          runApp( MyApp(
+            startWidget: widget,
+          ));
+    },
+    blocObserver: MyBlocObserver(),
+  );
 
-    startWidget: widget,
-  ));
 }
 
 class MyApp extends StatelessWidget {
