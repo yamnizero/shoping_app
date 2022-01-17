@@ -38,8 +38,8 @@ class HomeDataModel {
 
  class BannersModel
 {
-  late int id;
-  late String image;
+   int? id;
+   String? image;
   BannersModel.fromJson(Map<String, dynamic> json)
   {
     id = json['id'];
@@ -49,12 +49,12 @@ class HomeDataModel {
 
 class ProductModel
 {
-  late int id;
-  late dynamic price;
-  late dynamic oldPrice;
-  late dynamic discount;
-  late  String image;
-  late  String name;
+   int? id;
+   dynamic price;
+   dynamic oldPrice;
+   dynamic discount;
+    String? image;
+    String? name;
   late bool inFavorites;
   late bool inCart;
 
@@ -69,7 +69,7 @@ class ProductModel
     discount = json['discount'];
     image = json['image'];
     name = json['name'];
-    inFavorites = json['in_favorites'];
-    inCart = json['in_cart'];
+    inFavorites = json['in_favorites'] ?? false;
+    inCart = json['in_cart'] ?? false;
   }
 }

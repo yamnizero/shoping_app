@@ -7,12 +7,10 @@ class ShopLoginModel{
   ShopLoginModel.fromJson(Map<String,dynamic> json){
     status = json['status'];
     message = json['message'];
-    data = (json['data'] != null ? UserData.fromJson(json['data']):null)!;
-    // if (json['data'] != null) {
-    //   data = UserData.fromJson(json['data']);
-    // } else {
-    //   data = null;
-    // }
+    // data = json['data'] != null ? UserData.fromJson(json['data']:null;
+    if (json['data'] != null) {
+      data = UserData.fromJson(json['data']);
+    }
   }
 }
 class UserData{

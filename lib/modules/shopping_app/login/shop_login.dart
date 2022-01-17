@@ -7,6 +7,7 @@ import 'package:shoping_app/modules/shopping_app/login/cubit/cubit.dart';
 import 'package:shoping_app/modules/shopping_app/login/cubit/states.dart';
 import 'package:shoping_app/modules/shopping_app/register/shop_register.dart';
 import 'package:shoping_app/shared/components/compones.dart';
+import 'package:shoping_app/shared/components/constants.dart';
 import 'package:shoping_app/shared/local/cache_helper.dart';
 
 class ShopLoginScreen extends StatelessWidget {
@@ -32,6 +33,8 @@ class ShopLoginScreen extends StatelessWidget {
                   value: state.loginModel.data.token,
                 ).then((value)
                 {
+                  token = state.loginModel.data.token;
+
                   navigateAndFinish(context, const ShopLayout());
                 });
               }else

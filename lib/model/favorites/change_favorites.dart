@@ -1,7 +1,8 @@
 class ChangeFavoritesModel
 {
-  late bool status;
-  late String message;
+    bool? status;
+    String? message;
+
 
   ChangeFavoritesModel.fromJson(Map<String,dynamic> json)
   {

@@ -20,10 +20,10 @@ class ProductsScreen extends StatelessWidget {
       {
         if(state is ShopSuccessChangeFavoritesState)
         {
-          if(!state.model.status)
+          if(!state.model.status!)
           {
             showToast(
-                text: state.model.message,
+                text: state.model.message!,
                 states: ToastStates.ERROR,
             );
           }
@@ -58,7 +58,7 @@ class ProductsScreen extends StatelessWidget {
             CarouselSlider(
               items: model.data.banners
                   .map((e) => Image(
-                        image: NetworkImage(e.image),
+                        image: NetworkImage(e.image!),
                         width: double.infinity,
                         fit: BoxFit.cover,
                       ))
@@ -170,7 +170,7 @@ class ProductsScreen extends StatelessWidget {
         Stack(
           alignment: AlignmentDirectional.bottomStart,
           children: [
-            Image(image: NetworkImage(model.image),
+            Image(image: NetworkImage(model.image!),
               width: double.infinity,
               height: 200.0,
             ),
@@ -193,7 +193,7 @@ class ProductsScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(model.name,
+              Text(model.name!,
               maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
@@ -224,7 +224,7 @@ class ProductsScreen extends StatelessWidget {
                   IconButton(
                     onPressed: ()
                     {
-                      ShopCubit.get(context).changeFavorites(model.id);
+                      ShopCubit.get(context).changeFavorites(model.id!);
                       print(model.id);
                     },
                       icon:  CircleAvatar(

@@ -3,13 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shoping_app/layout/shop_layout/cubit/states.dart';
 import 'package:shoping_app/model/categories/categories_model.dart';
 import 'package:shoping_app/model/favorites/change_favorites.dart';
+import 'package:shoping_app/model/favorites/fav_model.dart';
 import 'package:shoping_app/model/home/home_model.dart';
+import 'package:shoping_app/model/login/login_model.dart';
 import 'package:shoping_app/modules/shopping_app/cateogries/cateogries_screen.dart';
 import 'package:shoping_app/modules/shopping_app/favorites/favorites_screen.dart';
+import 'package:shoping_app/modules/shopping_app/login/cubit/cubit.dart';
 import 'package:shoping_app/modules/shopping_app/products/products_screen.dart';
 import 'package:shoping_app/modules/shopping_app/setting/settings_screen.dart';
 import 'package:shoping_app/shared/components/constants.dart';
 import 'package:shoping_app/shared/end_points.dart';
+import 'package:shoping_app/shared/local/cache_helper.dart';
 import 'package:shoping_app/shared/remote/dio_helper.dart';
 
 class ShopCubit extends Cubit<ShopStates>
@@ -30,7 +34,7 @@ class ShopCubit extends Cubit<ShopStates>
     emit(ShopChangeBottomNavState());
   }
 
-    HomeModel? homeModel;
+     HomeModel? homeModel;
 
     Map<int,bool> favorites = {};
 
@@ -40,16 +44,15 @@ class ShopCubit extends Cubit<ShopStates>
 
     DioHelper.getData(
         url: HOME,
-      token: token,
+      token: CacheHelper.getData(key: 'token'),
     ).then((value)
     {
       homeModel = HomeModel.fromJson(value.data);
       //add item for favorites..
       homeModel!.data.products.forEach((element)
       {
-        //key and value
         favorites.addAll({
-          element.id: element.inFavorites,
+          element.id! : element.inFavorites,
         });
       });
       
@@ -72,7 +75,9 @@ class ShopCubit extends Cubit<ShopStates>
       token: token,
     ).then((value)
     {
-      categoriesModel = CategoriesModel.fromJson(value.data);
+      categoriesModel = CategoriesModel.fromJson(
+          value.data
+      );
       emit(ShopSuccessCategoriesState());
     }).catchError((error)
     {
@@ -82,9 +87,9 @@ class ShopCubit extends Cubit<ShopStates>
   }
 
 
-  late ChangeFavoritesModel changeFavoritesModel;
+   late ChangeFavoritesModel changeFavoritesModel;
 
-  void changeFavorites(int productId)
+  void changeFavorites( int productId)
   {
     favorites[productId] = !favorites[productId]!;
 
@@ -92,22 +97,68 @@ class ShopCubit extends Cubit<ShopStates>
 
     DioHelper.postData(
         url: FAVORITES,
-        data: {'product_id' : productId},
-        token: token,
+        data: {
+          'product_id' : productId,
+        },
+        token: CacheHelper.getData(key: 'token'),
     ).then((value)
     {
       changeFavoritesModel = ChangeFavoritesModel.fromJson(value.data);
       print(value.data);
-      if(!changeFavoritesModel.status)
+      if(!changeFavoritesModel.status!)
         {
           favorites[productId] = !favorites[productId]!;
-        }
-      emit(ShopSuccessChangeFavoritesState(changeFavoritesModel));
+        } else
+          {
+            getFavorites();
+          }
+      emit(ShopSuccessChangeFavoritesState(changeFavoritesModel!));
     }).catchError((error)
     {
       favorites[productId] = !favorites[productId]!;
 
       emit(ShopErrorChangeFavoritesState());
+    });
+  }
+
+     FavoritesModel? favoritesModel;
+     void getFavorites()
+  {
+    emit(ShopLoadingGetFavoritesState());
+
+    DioHelper.getData(
+      url: FAVORITES,
+      token: CacheHelper.getData(key: 'token'),
+    ).then((value)
+    {
+      favoritesModel = FavoritesModel.fromJson(value.data);
+      printFullText(value.data.toString());
+
+      emit(ShopSuccessGetFavoritesState());
+    }).catchError((error)
+    {
+      print(error.toString());
+      emit(ShopErrorGetFavoritesState());
+    });
+  }
+
+   late ShopLoginModel userModel;
+  void getUserData()
+  {
+    emit(ShopLoadingUserDataState());
+    DioHelper.getData(
+        url: PROFILE,
+        token: token
+    ).then((value)
+    {
+      userModel = ShopLoginModel.fromJson(value.data);
+      printFullText(userModel.data.name);
+
+      emit(ShopSuccessUserDataState(userModel));
+    }).catchError((error)
+    {
+      print(error.toString());
+      emit(ShopErrorUserDataState());
     });
   }
 

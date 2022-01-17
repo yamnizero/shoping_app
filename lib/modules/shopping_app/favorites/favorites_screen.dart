@@ -1,7 +1,9 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shoping_app/layout/shop_layout/cubit/cubit.dart';
 import 'package:shoping_app/layout/shop_layout/cubit/states.dart';
+import 'package:shoping_app/model/favorites/fav_model.dart';
 import 'package:shoping_app/shared/color/colors.dart';
 
 class FavoritesScreen extends StatelessWidget {
@@ -12,34 +14,37 @@ class FavoritesScreen extends StatelessWidget {
     return   BlocConsumer<ShopCubit, ShopStates>(
       listener: (context, state) {},
       builder: (context, state){
-        return ListView.separated(
-          itemBuilder: (context,index) => buildFavItem(),
-          separatorBuilder: (context,index) =>  Container(
-            width: double.infinity,
-            height: 1.0,
-            color: Colors.grey[300],
+        return ConditionalBuilder(
+          condition: state is! ShopLoadingGetFavoritesState,
+          builder: (context) => ListView.separated(
+            itemBuilder: (context,index) => buildFavItem(ShopCubit.get(context).favoritesModel!.data.data[index],context),
+            separatorBuilder: (context,index) =>  Container(
+              width: double.infinity,
+              height: 1.0,
+              color: Colors.grey[300],
+            ),
+            itemCount:ShopCubit.get(context).favoritesModel!.data.data.length,
           ),
-          itemCount:10 ,
+          fallback: (context) => const  Center(child: CircularProgressIndicator()),
         );
       },
     );
   }
 
-  Widget buildFavItem() => Padding(
+  Widget buildFavItem(FavoritesData model,context) => Padding(
     padding: const EdgeInsets.all(20.0),
-    child: Container(
+    child: SizedBox(
       height: 120.0,
       child: Row(
         children:  [
           Stack(
             alignment: AlignmentDirectional.bottomStart,
             children: [
-              Image(image: NetworkImage('https://student.valuxapps.com/storage/uploads/products/1615440322npwmU.71DVgBTdyLL._SL1500_.jpg'),
+              Image(image: NetworkImage(model.product!.image),
                 width: 120.0,
                 height: 120.0,
-                fit: BoxFit.cover,
               ),
-              if(1 != 0)
+              if(model.product!.discount != 0)
                 Container(
                   color: Colors.red,
                   padding: const EdgeInsets.symmetric(horizontal: 5.0,),
@@ -57,9 +62,9 @@ class FavoritesScreen extends StatelessWidget {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-
               children: [
-                Text('Apple iphone 12 pro',
+                Text(
+                  model.product!.name,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
@@ -67,20 +72,20 @@ class FavoritesScreen extends StatelessWidget {
                       height: 1.3
                   ),
                 ),
-                Spacer(),
+                const Spacer(),
                 Row(
                   children: [
                     Text(
-                      '20000',
-                      style: const TextStyle(
+                      model.product!.price.toString(),
+                      style: const  TextStyle(
                         fontSize: 12.0,
                         color: defaultColor,
                       ),
                     ),
                     const SizedBox(width: 5.0,),
-                    if(1 != 0 )
+                    if(model.product!.discount != 0 )
                       Text(
-                        '3000',
+                        model.product!.oldPrice.toString(),
                         style: const TextStyle(
                             fontSize: 10.0,
                             color: Colors.grey,
@@ -91,13 +96,15 @@ class FavoritesScreen extends StatelessWidget {
                     IconButton(
                       onPressed: ()
                       {
-                        // ShopCubit.get(context).changeFavorites(model.id);
-                        // print(model.id);
+                        ShopCubit.get(context).changeFavorites(model.product!.id);
+                        //print(model.id);
                       },
                       icon:  CircleAvatar(
                         radius: 15,
-                        backgroundColor: true
-                            ? Colors.red : Colors.grey,
+                        backgroundColor: 
+                       ShopCubit.get(context).favorites[model.product!.id]!
+                            ? Colors.red 
+                            : Colors.grey,
                         child: const  Icon(
                           Icons.favorite_border,
                           size: 14.0,
