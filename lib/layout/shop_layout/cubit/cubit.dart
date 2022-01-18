@@ -8,7 +8,6 @@ import 'package:shoping_app/model/home/home_model.dart';
 import 'package:shoping_app/model/login/login_model.dart';
 import 'package:shoping_app/modules/shopping_app/cateogries/cateogries_screen.dart';
 import 'package:shoping_app/modules/shopping_app/favorites/favorites_screen.dart';
-import 'package:shoping_app/modules/shopping_app/login/cubit/cubit.dart';
 import 'package:shoping_app/modules/shopping_app/products/products_screen.dart';
 import 'package:shoping_app/modules/shopping_app/setting/settings_screen.dart';
 import 'package:shoping_app/shared/components/constants.dart';
@@ -56,7 +55,7 @@ class ShopCubit extends Cubit<ShopStates>
         });
       });
       
-      print(favorites.toString());
+      //print(favorites.toString());
       
       emit(ShopSuccessHomeDataState());
     }).catchError((error)
@@ -104,7 +103,7 @@ class ShopCubit extends Cubit<ShopStates>
     ).then((value)
     {
       changeFavoritesModel = ChangeFavoritesModel.fromJson(value.data);
-      print(value.data);
+     // print(value.data);
       if(!changeFavoritesModel.status!)
         {
           favorites[productId] = !favorites[productId]!;
@@ -112,7 +111,7 @@ class ShopCubit extends Cubit<ShopStates>
           {
             getFavorites();
           }
-      emit(ShopSuccessChangeFavoritesState(changeFavoritesModel!));
+      emit(ShopSuccessChangeFavoritesState(changeFavoritesModel));
     }).catchError((error)
     {
       favorites[productId] = !favorites[productId]!;
@@ -132,7 +131,7 @@ class ShopCubit extends Cubit<ShopStates>
     ).then((value)
     {
       favoritesModel = FavoritesModel.fromJson(value.data);
-      printFullText(value.data.toString());
+      //printFullText(value.data.toString());
 
       emit(ShopSuccessGetFavoritesState());
     }).catchError((error)
@@ -141,25 +140,22 @@ class ShopCubit extends Cubit<ShopStates>
       emit(ShopErrorGetFavoritesState());
     });
   }
+  ShopLoginModel? userModel;
 
-   late ShopLoginModel userModel;
-  void getUserData()
+  void getUserDataSetting()
   {
     emit(ShopLoadingUserDataState());
     DioHelper.getData(
-        url: PROFILE,
-        token: token
+      url: 'profile',
+      token: CacheHelper.getData(key: 'token')
     ).then((value)
     {
       userModel = ShopLoginModel.fromJson(value.data);
-      printFullText(userModel.data.name);
-
-      emit(ShopSuccessUserDataState(userModel));
+      emit(ShopSuccessUserDataState(userModel!));
     }).catchError((error)
     {
       print(error.toString());
       emit(ShopErrorUserDataState());
     });
   }
-
 }

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,26 +10,24 @@ class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    var fromKey =GlobalKey<FormState>();
-    var nameController = TextEditingController();
-    var emailController = TextEditingController();
-    var phoneController = TextEditingController();
+    final fromKey =GlobalKey<FormState>();
+
+    final nameController = TextEditingController();
+    final emailController = TextEditingController();
+    final phoneController = TextEditingController();
 
     return  BlocConsumer<ShopCubit,ShopStates>(
       listener: (context,state) =>
       {
-        if(state is ShopSuccessUserDataState)
-        {
-
-        }
-
       },
       builder: (context,state)
       {
-        var model =ShopCubit.get(context).userModel;
-        nameController.text = model.data.name;
-        emailController.text = model.data.email;
-       phoneController.text = model.data.phone;
+        print('here---->  get data');
+          final model =ShopCubit.get(context).userModel!;
+           nameController.text = model.data!.name!;
+          emailController.text = model.data!.email!;
+          phoneController.text = model.data!.phone!;
+
         return ConditionalBuilder(
           condition: ShopCubit.get(context).userModel != null,
           builder: (context) => Padding(
