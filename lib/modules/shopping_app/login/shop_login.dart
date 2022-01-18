@@ -15,9 +15,9 @@ class ShopLoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var fromKey =GlobalKey<FormState>();
-     var emailController = TextEditingController();
-    var passwordController = TextEditingController();
+    final fromKey =GlobalKey<FormState>();
+    final emailController = TextEditingController();
+    final passwordController = TextEditingController();
     return BlocProvider(
       create: (BuildContext context) => ShopLoginCubit(),
       child: BlocConsumer<ShopLoginCubit ,ShopLoginStates>(
