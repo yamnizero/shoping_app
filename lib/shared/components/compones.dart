@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shoping_app/layout/shop_layout/cubit/cubit.dart';
+import 'package:shoping_app/model/favorites/fav_model.dart';
 import 'package:shoping_app/modules/shopping_app/login/shop_login.dart';
+import 'package:shoping_app/shared/color/colors.dart';
 import 'package:shoping_app/shared/local/cache_helper.dart';
 
 Widget defaultButton({
@@ -42,6 +45,7 @@ Widget defaultTextButton({
 Widget defaultTextForm({
   required TextEditingController controller,
   required TextInputType type,
+  Function(String)? onSubmit,
   required String? Function(String?)? validation,
   bool isPassword = false,
   required String label,
@@ -54,6 +58,10 @@ Widget defaultTextForm({
       keyboardType: type,
       obscureText: isPassword,
       validator: validation ,
+      onFieldSubmitted: (s)
+      {
+        onSubmit!(s);
+      },
       decoration: InputDecoration(
         border: OutlineInputBorder(),
         labelText: label,
@@ -129,4 +137,95 @@ void singOut(context){
     }
   });
 }
+
+Widget buildListProduct(model,context,{bool isOldPrice = true}) => Padding(
+  padding: const EdgeInsets.all(20.0),
+  child: SizedBox(
+    height: 120.0,
+    child: Row(
+      children:  [
+        Stack(
+          alignment: AlignmentDirectional.bottomStart,
+          children: [
+            Image(image: NetworkImage(model.image),
+              width: 120.0,
+              height: 120.0,
+            ),
+            if(model.discount != 0 && isOldPrice)
+              Container(
+                color: Colors.red,
+                padding: const EdgeInsets.symmetric(horizontal: 5.0,),
+                child: const Text(
+                  'DISCOUNT',
+                  style: TextStyle(
+                      fontSize: 8.0,
+                      color: Colors.white
+                  ),
+                ),
+              ),
+          ],
+        ),
+        const SizedBox(width: 20.0,),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                model.name,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                    fontSize: 14.0,
+                    height: 1.3
+                ),
+              ),
+              const Spacer(),
+              Row(
+                children: [
+                  Text(
+                    model.price.toString(),
+                    style: const  TextStyle(
+                      fontSize: 12.0,
+                      color: defaultColor,
+                    ),
+                  ),
+                  const SizedBox(width: 5.0,),
+                  if(model.discount != 0 && isOldPrice)
+                    Text(
+                      model.oldPrice.toString(),
+                      style: const TextStyle(
+                          fontSize: 10.0,
+                          color: Colors.grey,
+                          decoration: TextDecoration.lineThrough
+                      ),
+                    ),
+                  const Spacer(),
+                  IconButton(
+                    onPressed: ()
+                    {
+                      ShopCubit.get(context).changeFavorites(model.id);
+                      //print(model.id);
+                    },
+                    icon:  CircleAvatar(
+                      radius: 15,
+                      backgroundColor:
+                      ShopCubit.get(context).favorites[model.id]!
+                          ? Colors.red
+                          : Colors.grey,
+                      child: const  Icon(
+                        Icons.favorite_border,
+                        size: 14.0,
+                        color: Colors.white,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  ),
+);
 
