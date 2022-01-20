@@ -38,6 +38,7 @@ dependencies:
   carousel_slider:
   conditional_builder_null_safety:
   fluttertoast: ^8.0.8
+  flutter_offline: ^2.0.0
   hexcolor:
 
 
